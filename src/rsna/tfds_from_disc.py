@@ -29,7 +29,7 @@ def make_dataset(img_paths, batch_size, load_size, crop_size, training, drop_rem
             img = tf.image.resize_with_pad(img, load_size, load_size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
             img = tf.image.random_crop(img, [crop_size, crop_size, tf.shape(img)[-1]])
             img = normalize_img(img, special_normalisation)
-            if channels == 3:
+            if channels == 1:
                 img = tf.image.rgb_to_grayscale(img)
             if label is not None:
                 return img, label
@@ -41,7 +41,7 @@ def make_dataset(img_paths, batch_size, load_size, crop_size, training, drop_rem
             img = tf.image.resize_with_pad(img, crop_size, crop_size, method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
             img = tf.image.random_crop(img, [crop_size, crop_size, tf.shape(img)[-1]])
             img = normalize_img(img, special_normalisation)
-            if channels == 3:
+            if channels == 1:
                 img = tf.image.rgb_to_grayscale(img)
             if label is not None:
                 return img, label
