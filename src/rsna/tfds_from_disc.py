@@ -122,7 +122,8 @@ def get_rsna_ds_split_class(tfds_path, batch_size, crop_size, load_size, special
     return A_B_dataset, A_B_dataset_valid, A_B_dataset_test, len_dataset_train
 
 
-def get_rsna_TEST_ds_split_class(tfds_path, batch_size, crop_size, load_size, special_normalisation=None, channels=3):
+def get_rsna_TEST_ds_split_class(tfds_path, batch_size, crop_size, load_size, special_normalisation=None, channels=3,
+                                 training=False):
     """
     Method loads the TEST RSNA dataloaders that return two samples: one of class A and one of class B.
     Can be used to train CycleGANs.
@@ -142,17 +143,17 @@ def get_rsna_TEST_ds_split_class(tfds_path, batch_size, crop_size, load_size, sp
     A_test = glob.glob(tfds_path + "/rsna_data/test/normal/normal/*")
     B_test = glob.glob(tfds_path + "/rsna_data/test/abnormal/abnormal/*")
 
-    A_dataset = make_dataset(A_train, batch_size, load_size, crop_size, training=False, drop_remainder=True,
+    A_dataset = make_dataset(A_train, batch_size, load_size, crop_size, training=training, drop_remainder=True,
                              shuffle=False, repeat=1, special_normalisation=special_normalisation,
                              channels=channels)
-    B_dataset = make_dataset(B_train, batch_size, load_size, crop_size, training=False, drop_remainder=True,
+    B_dataset = make_dataset(B_train, batch_size, load_size, crop_size, training=training, drop_remainder=True,
                              shuffle=False, repeat=1, special_normalisation=special_normalisation,
                              channels=channels)
 
-    A_dataset_test = make_dataset(A_test, batch_size, load_size, crop_size, training=False, drop_remainder=True,
+    A_dataset_test = make_dataset(A_test, batch_size, load_size, crop_size, training=training, drop_remainder=True,
                                   shuffle=False, repeat=1, special_normalisation=special_normalisation,
                                   channels=channels)
-    B_dataset_test = make_dataset(B_test, batch_size, load_size, crop_size, training=False, drop_remainder=True,
+    B_dataset_test = make_dataset(B_test, batch_size, load_size, crop_size, training=training, drop_remainder=True,
                                   shuffle=False, repeat=1, special_normalisation=special_normalisation,
                                   channels=channels)
     return A_dataset, B_dataset, A_dataset_test, B_dataset_test
