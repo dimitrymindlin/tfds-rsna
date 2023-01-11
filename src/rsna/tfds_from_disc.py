@@ -88,7 +88,7 @@ def make_zip_dataset(A_img_paths, B_img_paths, batch_size, load_size, crop_size,
 
 
 def make_concat_dataset(A_img_paths, B_img_paths, batch_size, load_size, crop_size, training, shuffle=False,
-                        special_normalisation=None):
+                        special_normalisation=None, channels=3):
     dataset_length = len(A_img_paths) + len(B_img_paths)
     class_labels = [(1, 0) for _ in range(len(A_img_paths))]
     class_labels.extend([(0, 1) for _ in range(len(B_img_paths))])
@@ -96,7 +96,7 @@ def make_concat_dataset(A_img_paths, B_img_paths, batch_size, load_size, crop_si
     all_image_paths = A_img_paths
     return make_dataset(all_image_paths, batch_size, load_size, crop_size, training, drop_remainder=True,
                         shuffle=shuffle, repeat=1, labels=class_labels,
-                        special_normalisation=special_normalisation), dataset_length
+                        special_normalisation=special_normalisation, channels=channels), dataset_length
 
 
 def get_rsna_ds_split_class(tfds_path, batch_size, crop_size, load_size, special_normalisation=None, channels=3):
@@ -134,7 +134,7 @@ def get_rsna_ds_split_class(tfds_path, batch_size, crop_size, load_size, special
     return A_B_dataset, A_B_dataset_valid, A_B_dataset_test, len_dataset_train
 
 
-def get_rsna_ds_for_clf(tfds_path, batch_size, crop_size, load_size, special_normalisation=None):
+def get_rsna_ds_for_clf(tfds_path, batch_size, crop_size, load_size, special_normalisation=None, channels=3):
     """
     Method loads the RSNA data. Can be used to train classifiers.
     tfds_path: Path to tensorflow datasets directory.
@@ -153,16 +153,19 @@ def get_rsna_ds_for_clf(tfds_path, batch_size, crop_size, load_size, special_nor
     A_B_dataset, len_dataset_train = make_concat_dataset(A_train, B_train, batch_size,
                                                          load_size,
                                                          crop_size, training=True, shuffle=True,
-                                                         special_normalisation=special_normalisation)
+                                                         special_normalisation=special_normalisation,
+                                                         channels=channels)
 
     A_B_dataset_valid, _ = make_concat_dataset(A_valid, B_valid, batch_size,
                                                load_size,
                                                crop_size, training=False,
-                                               special_normalisation=special_normalisation)
+                                               special_normalisation=special_normalisation,
+                                               channels=channels)
 
     A_B_dataset_test, _ = make_concat_dataset(A_test, B_test, batch_size, load_size,
                                               crop_size, training=False,
-                                              special_normalisation=special_normalisation)
+                                              special_normalisation=special_normalisation,
+                                              channels=channels)
     return A_B_dataset, A_B_dataset_valid, A_B_dataset_test, len_dataset_train
 
 
